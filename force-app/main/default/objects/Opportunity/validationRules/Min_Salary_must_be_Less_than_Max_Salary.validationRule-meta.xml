@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Min_Salary_must_be_Less_than_Max_Salary</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  NOT(ISBLANK(Salary_Lowest__c )),
+  NOT(ISBLANK(Salary_Highest__c)), 
+  Salary_Lowest__c &gt; Salary_Highest__c
+)</errorConditionFormula>
+    <errorDisplayField>Salary_Lowest__c</errorDisplayField>
+    <errorMessage>Salary - Lowest must be less than Salary - Highest</errorMessage>
+</ValidationRule>
