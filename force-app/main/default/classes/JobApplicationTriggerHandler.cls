@@ -16,7 +16,7 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
     }
 
     public override void beforeUpdate(){
-
+        JobApplicationTriggerHelper.calculateTakeHomePay(newJobAppList);
     }
 
     public override void afterInsert(){
