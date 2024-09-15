@@ -11,7 +11,7 @@
         <name>utilityItems</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>Sales App Utility Bar</masterLabel>
+    <masterLabel>Job Application App Utility Bar</masterLabel>
     <template>
         <name>one:utilityBarTemplateDesktop</name>
     </template>

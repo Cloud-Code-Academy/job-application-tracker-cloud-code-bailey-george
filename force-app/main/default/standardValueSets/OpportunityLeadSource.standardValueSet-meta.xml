@@ -2,38 +2,38 @@
 <StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <sorted>true</sorted>
     <standardValue>
-        <fullName>Consultant</fullName>
+        <fullName>Web</fullName>
         <default>false</default> 
-        <label>Consultant</label>
+        <label>Web</label>
     </standardValue>
     <standardValue>
-        <fullName>Contract</fullName>
+        <fullName>Phone Inquiry</fullName>
         <default>false</default>
-        <label>Contract</label>
+        <label>Phone Inquiry</label>
     </standardValue>
     <standardValue>
-        <fullName>Full-Time</fullName>
-        <default>true</default>
-        <label>Full-Time</label>
-    </standardValue>
-    <standardValue>
-        <fullName>Intern</fullName>
+        <fullName>Jooble</fullName>
         <default>false</default>
-        <label>Intern</label>
+        <label>Jooble</label>
     </standardValue>
     <standardValue>
-        <fullName>Part-Time</fullName>
+        <fullName>LinkedIn</fullName>
         <default>false</default>
-        <label>Part-Time</label>
+        <label>LinkedIn</label>
     </standardValue>
     <standardValue>
-        <fullName>Temporary</fullName>
+        <fullName>Partner Referral</fullName>
         <default>false</default>
-        <label>Temporary</label>
+        <label>Partner Referral</label>
     </standardValue>
     <standardValue>
-        <fullName>Volunteer</fullName>
+        <fullName>Purchased List</fullName>
         <default>false</default>
-        <label>Volunteer</label>
+        <label>Purchased List</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Other</fullName>
+        <default>false</default>
+        <label>Other</label>
     </standardValue>
 </StandardValueSet>
