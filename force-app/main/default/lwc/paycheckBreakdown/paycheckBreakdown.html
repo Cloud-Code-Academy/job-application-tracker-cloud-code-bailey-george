@@ -1,0 +1,52 @@
+<template>
+    <lightning-card title="Paycheck Breakdown Calculator">
+        <lightning-button 
+            variant="brand" 
+            label="Calculate" 
+            title="Calculate"
+            data-id="calculateButton" 
+            slot="actions" 
+            onclick={calculateSalary}
+        ></lightning-button>        
+        <div class="slds-var-p-horizontal_small">
+            <lightning-input
+                type="number"
+                name="salary"
+                label="Salary ($)"
+                value={salary}
+                onchange={handleChange}
+            ></lightning-input>
+            <lightning-input 
+                type="number"
+                name="federalIncomeTax" 
+                label="Federal Income Tax (%)"
+                value={fedIncomeTaxWeight}
+                onchange={handleChange}
+                
+            ></lightning-input>
+            <lightning-input
+                type="number"
+                name="socialSecurity" 
+                value={socialSecurityWeight} 
+                label="Social Security (%)"
+                onchange={handleChange}
+            ></lightning-input>
+            <lightning-input 
+                type="number" 
+                name="medicare"
+                label="Medicare (%)"
+                value={medicareWeight}
+                onchange={handleChange}
+            ></lightning-input>
+        </div>
+
+        <div slot ="footer">
+            <h1 class="slds-text-heading_x-large slds-text-title_caps">&#128178;Paycheck Breakdown&#128178;</h1>
+                <p>Annual Take Home Pay: <span class='takeHomePayText'>${takeHomePay}</span></p>
+                <p>Monthly Take Home Pay: <span class='takeHomePayText'>${monthlyTakeHomePay}</span></p>
+                <p>Bi-weekly Take Home Pay: <span class='takeHomePayText'>${biWeeklyTakeHomePay}</span></p>
+                <p>Weekly Take Home Pay: <span class='takeHomePayText'>${weeklyTakeHomePay}</span></p>
+    </div>
+         <!--text that will populate below the calculate button: Annual Take Home Pay is 'calculated', Monthly Take Home Pay is 'calculated', Bi-Weekly Take Home Pay is 'calculated', Weekly Take Home Pay is 'calculated'-->
+    </lightning-card>
+</template>
