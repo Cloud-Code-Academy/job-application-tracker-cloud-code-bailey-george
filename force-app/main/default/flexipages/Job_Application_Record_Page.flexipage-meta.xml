@@ -156,26 +156,6 @@
                 <identifier>RecordLeadSourceField2</identifier>
             </fieldInstance>
         </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Job_Board_Site__c</fieldItem>
-                <identifier>RecordJob_Board_Site_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.URL__c</fieldItem>
-                <identifier>RecordURL_cField2</identifier>
-            </fieldInstance>
-        </itemInstances>
         <name>Facet-5ac93963-f273-471a-9a26-2b29cb8ebb3e</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -248,6 +228,36 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Jooble_Salary__c</fieldItem>
                 <identifier>RecordJooble_Salary_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Job_Board_Site__c</fieldItem>
+                <identifier>RecordJob_Board_Site_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Jooble_External_Id__c</fieldItem>
+                <identifier>RecordJooble_External_Id__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.URL__c</fieldItem>
+                <identifier>RecordURL_cField2</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-9c86fc6e-a6eb-4d22-b38b-f2839a1609d0</name>
