@@ -560,6 +560,153 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Annual_Gross_Salary__c</fieldItem>
+                <identifier>RecordAnnual_Gross_Salary_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Filing_Status__c</fieldItem>
+                <identifier>RecordFiling_Status_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Spouse_s_Salary__c</fieldItem>
+                <identifier>RecordSpouse_s_Salary_cField</identifier>
+                <visibilityRule>
+                    <criteria>
+                        <leftValue>{!Record.Filing_Status__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>Married filing jointly</rightValue>
+                    </criteria>
+                </visibilityRule>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Federal_Income_Tax__c</fieldItem>
+                <identifier>RecordFederal_Income_Tax_cField</identifier>
+                <visibilityRule>
+                    <booleanFilter>1 OR 2</booleanFilter>
+                    <criteria>
+                        <leftValue>{!Record.Annual_Gross_Salary__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>Salary - Lowest</rightValue>
+                    </criteria>
+                    <criteria>
+                        <leftValue>{!Record.Annual_Gross_Salary__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>Salary - Highest</rightValue>
+                    </criteria>
+                </visibilityRule>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Social_Security__c</fieldItem>
+                <identifier>RecordSocial_Security_cField</identifier>
+                <visibilityRule>
+                    <booleanFilter>1 OR 2</booleanFilter>
+                    <criteria>
+                        <leftValue>{!Record.Annual_Gross_Salary__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>Salary - Lowest</rightValue>
+                    </criteria>
+                    <criteria>
+                        <leftValue>{!Record.Annual_Gross_Salary__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>Salary - Highest</rightValue>
+                    </criteria>
+                </visibilityRule>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Medicare__c</fieldItem>
+                <identifier>RecordMedicare_cField</identifier>
+                <visibilityRule>
+                    <booleanFilter>1 OR 2</booleanFilter>
+                    <criteria>
+                        <leftValue>{!Record.Annual_Gross_Salary__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>Salary - Lowest</rightValue>
+                    </criteria>
+                    <criteria>
+                        <leftValue>{!Record.Annual_Gross_Salary__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>Salary - Highest</rightValue>
+                    </criteria>
+                </visibilityRule>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Take_Home_Pay__c</fieldItem>
+                <identifier>RecordTake_Home_Pay_cField</identifier>
+                <visibilityRule>
+                    <booleanFilter>1 OR 2</booleanFilter>
+                    <criteria>
+                        <leftValue>{!Record.Annual_Gross_Salary__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>Salary - Lowest</rightValue>
+                    </criteria>
+                    <criteria>
+                        <leftValue>{!Record.Annual_Gross_Salary__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>Salary - Highest</rightValue>
+                    </criteria>
+                </visibilityRule>
+            </fieldInstance>
+        </itemInstances>
+        <name>Facet-7daf224f-4b66-442b-9ba4-c519a9a3b4f2</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-7daf224f-4b66-442b-9ba4-c519a9a3b4f2</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>flexipage_column</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>Facet-4fd22cc0-7cd6-4299-97cc-d3dd7cf06fe9</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
             <componentInstance>
                 <componentName>cooper:companyInsightTeaserCard</componentName>
                 <identifier>cooper_companyInsightTeaserCard</identifier>
@@ -611,6 +758,30 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>columns</name>
+                    <value>Facet-4fd22cc0-7cd6-4299-97cc-d3dd7cf06fe9</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>horizontalAlignment</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <value>Take Home Pay Estimation</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:fieldSection</componentName>
+                <identifier>flexipage_fieldSection</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>paycheckBreakdown</componentName>
+                <identifier>c_paycheckBreakdown</identifier>
+            </componentInstance>
+        </itemInstances>
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
