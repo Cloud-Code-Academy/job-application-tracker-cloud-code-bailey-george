@@ -23,8 +23,6 @@ export default class PaycheckBreakdown extends LightningElement {
         this.weeklyTakeHomePay = (this.takeHomePay / 52).toFixed(2);
     }
 
-
-
     handleChange(event){
         const inputName = event.target.name;
         let value = Number(event.target.value);

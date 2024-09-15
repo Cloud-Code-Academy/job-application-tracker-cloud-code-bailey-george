@@ -21,8 +21,7 @@
                 name="federalIncomeTax" 
                 label="Federal Income Tax (%)"
                 value={fedIncomeTaxWeight}
-                onchange={handleChange}
-                
+                onchange={handleChange}  
             ></lightning-input>
             <lightning-input
                 type="number"
@@ -39,14 +38,12 @@
                 onchange={handleChange}
             ></lightning-input>
         </div>
-
         <div slot ="footer">
             <h1 class="slds-text-heading_x-large slds-text-title_caps">&#128178;Paycheck Breakdown&#128178;</h1>
                 <p>Annual Take Home Pay: <span class='takeHomePayText'>${takeHomePay}</span></p>
                 <p>Monthly Take Home Pay: <span class='takeHomePayText'>${monthlyTakeHomePay}</span></p>
                 <p>Bi-weekly Take Home Pay: <span class='takeHomePayText'>${biWeeklyTakeHomePay}</span></p>
                 <p>Weekly Take Home Pay: <span class='takeHomePayText'>${weeklyTakeHomePay}</span></p>
-    </div>
-         <!--text that will populate below the calculate button: Annual Take Home Pay is 'calculated', Monthly Take Home Pay is 'calculated', Bi-Weekly Take Home Pay is 'calculated', Weekly Take Home Pay is 'calculated'-->
+        </div>
     </lightning-card>
 </template>
