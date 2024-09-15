@@ -10,14 +10,14 @@ export default class PaycheckBreakdown extends LightningElement {
     monthlyTakeHomePay = 0;
     biWeeklyTakeHomePay = 0;
     weeklyTakeHomePay = 0;
-
+ 
     calculateSalary(){
         	
         let fedIncomeTaxRemoved = this.salary * (this.fedIncomeTaxWeight *.01);
         let socialSecurityRemoved = this.salary * (this.socialSecurityWeight * .01);
         let medicareRemoved = this.salary * (this.medicareWeight * .01);
         this.takeHomePay = (this.salary - (fedIncomeTaxRemoved + socialSecurityRemoved + medicareRemoved)).toFixed(2);
-
+        
         this.monthlyTakeHomePay = (this.takeHomePay / 12).toFixed(2);
         this.biWeeklyTakeHomePay = (this.takeHomePay / 26).toFixed(2);
         this.weeklyTakeHomePay = (this.takeHomePay / 52).toFixed(2);
