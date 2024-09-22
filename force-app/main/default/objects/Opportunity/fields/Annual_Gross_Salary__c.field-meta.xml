@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Annual_Gross_Salary__c</fullName>
+    <label>Annual Gross Salary</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Salary - Lowest</fullName>
+                <default>false</default>
+                <label>Salary - Lowest</label>
+            </value>
+            <value>
+                <fullName>Salary - Highest</fullName>
+                <default>false</default>
+                <label>Salary - Highest</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
