@@ -1,13 +1,5 @@
 <template>
     <lightning-card title="Paycheck Breakdown Calculator">
-        <lightning-button 
-            variant="brand" 
-            label="Calculate" 
-            title="Calculate"
-            data-id="calculateButton" 
-            slot="actions" 
-            onclick={calculateSalary}
-        ></lightning-button>        
         <div class="slds-var-p-horizontal_small">
             <lightning-input
                 type="number"
@@ -38,8 +30,17 @@
                 onchange={handleChange}
             ></lightning-input>
         </div>
+            <lightning-button 
+                variant="brand" 
+                label="Calculate" 
+                title="Calculate"
+                slot="footer" 
+                data-id="calculateButton" 
+                onclick={calculateSalary}
+            ></lightning-button>
         <div slot ="footer">
-            <h1 class="slds-text-heading_x-large slds-text-title_caps">&#128178;Paycheck Breakdown&#128178;</h1>
+            <br>
+            <h1 class="slds-text-heading_x-large slds-text-title_caps">&#128178;<b>Paycheck Breakdown</b>&#128178;</h1>
                 <p>Annual Take Home Pay: <span class='takeHomePayText'>${takeHomePay}</span></p>
                 <p>Monthly Take Home Pay: <span class='takeHomePayText'>${monthlyTakeHomePay}</span></p>
                 <p>Bi-weekly Take Home Pay: <span class='takeHomePayText'>${biWeeklyTakeHomePay}</span></p>
