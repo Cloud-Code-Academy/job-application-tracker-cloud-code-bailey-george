@@ -1,0 +1,10 @@
+**/jsconfig.json
+
+**/tsconfig.json
+
+**/.eslintrc.json
+
+**/*.ts
+
+# LWC Jest
+**/__tests__/**
