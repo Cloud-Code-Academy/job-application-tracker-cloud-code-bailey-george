@@ -12,11 +12,12 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
     }
 
     public override void beforeInsert(){
-        JobApplicationTriggerHelper.setStatusToSaved(newJobAppList);
+        JobApplicationTriggerHelper.setStatusToSaved(newJobAppList);  
     }
 
     public override void beforeUpdate(){
         JobApplicationTriggerHelper.calculateTakeHomePay(newJobAppList);
+        JobApplicationTriggerHelper.populatePrimaryContact(newJobAppList, newJobAppMap);
     }
 
     public override void afterInsert(){
