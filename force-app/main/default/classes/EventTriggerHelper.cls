@@ -6,7 +6,7 @@ public with sharing class EventTriggerHelper extends TriggerHandler{
 
     public static void PreventOverlappingEvents(List<Event> eventsTriggered){
 
-        for (Event newEvent : eventsTriggered) {
+        for (Event newEvent : eventsTriggered) { 
             List<Event> overlappingEvents = [
                 SELECT Id 
                 FROM Event

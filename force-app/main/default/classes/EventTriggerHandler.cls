@@ -2,7 +2,7 @@ public with sharing class EventTriggerHandler extends TriggerHandler{
     private List<Event> neweventList;
     private List<Event> oldeventList;
     private Map<Id, Event> neweventMap;
-    private Map<Id, Event> oldeventMap;
+    private Map<Id, Event> oldeventMap; 
 
     public EventTriggerHandler() {
         this.neweventList = (List<Event>)Trigger.new;
