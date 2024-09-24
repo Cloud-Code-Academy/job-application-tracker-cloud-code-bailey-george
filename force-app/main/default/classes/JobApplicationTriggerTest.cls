@@ -33,35 +33,36 @@ public with sharing class JobApplicationTriggerTest {
     }
 
     @isTest
-    public static void testSetStatusToSaved(){
+    public static void testSetStatusToSaved_positive(){
         List<Opportunity> appsJustInserted = [SELECT Id, Name, StageName FROM Opportunity];
         for(Opportunity app : appsJustInserted){
-            System.assertEquals(app.StageName, 'Saved', 'Initial stage set to Saved as expected');
+            System.assertEquals('Saved', app.StageName, 'Initial stage no set to Saved as expected');
         }
     }
 
     @isTest
-    public static void testGenerateTaskNewJobApp() { 
-        Test.startTest();
+    public static void testGenerateTaskNewJobApp_positive() { 
         List<Opportunity> insertedApps = [SELECT Id, Name FROM Opportunity];
         Map<Id, Task> tasksById = new Map<Id, Task>([SELECT WhatId, Subject, Description FROM TASK WHERE WhatId IN :insertedApps]);
         for(Id task : tasksById.keySet()){
             Task taskToEval = tasksById.get(task);
             System.assertEquals(taskToEval.description, 'Check if the job description aligns with your interests and values \nReview the highlighted skills to see if the role is a good fit \nResearch the company or role and mark your excitement level', 'Task for inserted job application was created as expected');
         }
-        Test.stopTest();
     }
 
     @isTest
-    public static void testGenerateTaskAfterUpdate_applying(){ 
-        Test.startTest();
+    public static void testGenerateTaskAfterUpdateApplying_positive(){ 
         List<Opportunity> insertedApps = [SELECT Id, Name, StageName FROM Opportunity];
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         for(Opportunity jobApp : insertedApps){
             jobApp.StageName = 'Applying';
             oppsToUpdate.add(jobApp);
         }
+
+        Test.startTest();
         Update oppsToUpdate;
+        Test.stopTest();
+
         Map<Id, Task> tasksById = new Map<Id, Task>([SELECT Id, WhatId, Subject, Description FROM TASK WHERE WhatId IN :insertedApps AND Subject = 'Job Application Tasks when Applying']); 
         Map<Id, Task> tasksByJobAppId = new Map<Id, Task>();
         for(Id task : tasksById.keySet()){
@@ -73,19 +74,21 @@ public with sharing class JobApplicationTriggerTest {
             System.assertNotEquals(taskForApp, null, 'No appropriate task exists for this opportunity');
             System.assertEquals(taskForApp.subject, 'Job Application Tasks when Applying', 'Task does not have the right details');
         }
-        Test.stopTest();
     }
 
     @isTest
-    public static void testGenerateTaskAfterUpdate_applied(){ 
-        Test.startTest();
+    public static void testGenerateTaskAfterUpdateApplied_positive(){ 
         List<Opportunity> insertedApps = [SELECT Id, Name, StageName FROM Opportunity];
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         for(Opportunity jobApp : insertedApps){
             jobApp.StageName = 'Applied';
             oppsToUpdate.add(jobApp);
         }
+
+        Test.startTest();
         Update oppsToUpdate;
+        Test.stopTest();
+
         Map<Id, Task> tasksById = new Map<Id, Task>([SELECT Id, WhatId, Subject, Description FROM TASK WHERE WhatId IN :insertedApps AND Subject = 'Job Application Tasks after Applied']); 
         Map<Id, Task> tasksByJobAppId = new Map<Id, Task>();
         for(Id task : tasksById.keySet()){
@@ -97,19 +100,21 @@ public with sharing class JobApplicationTriggerTest {
             System.assertNotEquals(taskForApp, null, 'No appropriate task exists for this opportunity');
             System.assertEquals(taskForApp.subject, 'Job Application Tasks after Applied', 'Task does not have the right details');
         }
-        Test.stopTest();
     }
 
     @isTest
-    public static void testGenerateTaskAfterUpdate_interviewing(){ 
-        Test.startTest();
+    public static void testGenerateTaskAfterUpdateInterviewing_positive(){ 
         List<Opportunity> insertedApps = [SELECT Id, Name, StageName FROM Opportunity];
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         for(Opportunity jobApp : insertedApps){
             jobApp.StageName = 'Interviewing';
             oppsToUpdate.add(jobApp);
         }
+
+        Test.startTest();
         Update oppsToUpdate;
+        Test.stopTest();
+
         Map<Id, Task> tasksById = new Map<Id, Task>([SELECT Id, WhatId, Subject, Description FROM TASK WHERE WhatId IN :insertedApps AND Subject = 'Job Application Tasks when Interviewing']); 
         Map<Id, Task> tasksByJobAppId = new Map<Id, Task>();
         for(Id task : tasksById.keySet()){
@@ -121,19 +126,21 @@ public with sharing class JobApplicationTriggerTest {
             System.assertNotEquals(taskForApp, null, 'No appropriate task exists for this opportunity');
             System.assertEquals(taskForApp.subject, 'Job Application Tasks when Interviewing', 'Task does not have the right details');
         }
-        Test.stopTest();
     }
 
     @isTest
-    public static void testGenerateTaskAfterUpdate_negotiating(){ 
-        Test.startTest();
+    public static void testGenerateTaskAfterUpdateNegotiating_positive(){ 
         List<Opportunity> insertedApps = [SELECT Id, Name, StageName FROM Opportunity];
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         for(Opportunity jobApp : insertedApps){
             jobApp.StageName = 'Negotiating';
             oppsToUpdate.add(jobApp);
         }
+
+        Test.startTest();
         Update oppsToUpdate;
+        Test.stopTest();
+
         Map<Id, Task> tasksById = new Map<Id, Task>([SELECT Id, WhatId, Subject, Description FROM TASK WHERE WhatId IN :insertedApps AND Subject = 'Job Application Tasks when Negotiating']); 
         Map<Id, Task> tasksByJobAppId = new Map<Id, Task>();
         for(Id task : tasksById.keySet()){
@@ -144,20 +151,22 @@ public with sharing class JobApplicationTriggerTest {
             Task taskForApp = tasksByJobAppId.get(apps.Id);
             System.assertNotEquals(taskForApp, null, 'No appropriate task exists for this opportunity');
             System.assertEquals(taskForApp.subject, 'Job Application Tasks when Negotiating', 'Task does not have the right details');
-        }
-        Test.stopTest();
+        }  
     }
     
     @isTest
-    public static void testGenerateTaskAfterUpdate_accepted(){ 
-        Test.startTest();
+    public static void testGenerateTaskAfterUpdateAccepted_positive(){ 
         List<Opportunity> insertedApps = [SELECT Id, Name, StageName FROM Opportunity];
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         for(Opportunity jobApp : insertedApps){
             jobApp.StageName = 'Accepted';
             oppsToUpdate.add(jobApp);
         }
+
+        Test.startTest();
         Update oppsToUpdate;
+        Test.stopTest();
+
         Map<Id, Task> tasksById = new Map<Id, Task>([SELECT Id, WhatId, Subject, Description FROM TASK WHERE WhatId IN :insertedApps AND Subject = 'Job Application Tasks once Accepted']); 
         Map<Id, Task> tasksByJobAppId = new Map<Id, Task>();
         for(Id task : tasksById.keySet()){
@@ -169,19 +178,21 @@ public with sharing class JobApplicationTriggerTest {
             System.assertNotEquals(taskForApp, null, 'No appropriate task exists for this opportunity');
             System.assertEquals(taskForApp.subject, 'Job Application Tasks once Accepted', 'Task does not have the right details');
         }
-        Test.stopTest();
     }
 
     @isTest
-    public static void testGenerateTaskAfterUpdate_closed(){ 
-        Test.startTest();
+    public static void testGenerateTaskAfterUpdateClosed_positive(){ 
         List<Opportunity> insertedApps = [SELECT Id, Name, StageName FROM Opportunity];
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         for(Opportunity jobApp : insertedApps){
             jobApp.StageName = 'Closed';
             oppsToUpdate.add(jobApp);
         }
+
+        Test.startTest();
         Update oppsToUpdate;
+        Test.stopTest();
+
         Map<Id, Task> tasksById = new Map<Id, Task>([SELECT Id, WhatId, Subject, Description FROM TASK WHERE WhatId IN :insertedApps AND Subject = 'Job Application Tasks when Closed']); 
         Map<Id, Task> tasksByJobAppId = new Map<Id, Task>();
         for(Id task : tasksById.keySet()){
@@ -193,14 +204,28 @@ public with sharing class JobApplicationTriggerTest {
             System.assertNotEquals(taskForApp, null, 'No appropriate task exists for this opportunity');
             System.assertEquals(taskForApp.subject, 'Job Application Tasks when Closed', 'Task does not have the right details');
         }
-        Test.stopTest();
     }
 
     @isTest
-    public static void testCalculateTakeHomePay(){
+    public static void testGenerateTaskAfterUpdate_negative(){
+        Opportunity testApp = [SELECT Name, Id, StageName FROM Opportunity LIMIT 1];
+        testApp.StageName = 'Applied';
+        Update testApp;
+        List<Task> tasksForApp1 = [SELECT Id FROM Task WHERE WhatId = :testApp.Id];
+
         Test.startTest();
+        testApp.StageName = 'Applied';
+        Update testApp;
+        Test.stopTest();
+
+        List<Task> tasksForApp2 = [SELECT Id FROM Task WHERE WhatId = :testApp.Id];
+        System.assertEquals(tasksForApp1, tasksForApp2, 'A task was created even though the stage did not change');
+    }
+
+    @isTest
+    public static void testCalculateTakeHomePay_positive(){
         List<Opportunity> insertedApps = [SELECT Id, Name, StageName, Salary_Lowest__c, Salary_Highest__c, Annual_Gross_Salary__c, Filing_Status__c, Spouse_s_Salary__c, Federal_Income_Tax__c, Social_Security__c, Medicare__c, Take_Home_Pay__c
-                                          FROM Opportunity];
+                                          FROM Opportunity LIMIT 2];
         List<Opportunity> appsToUpdate = new List<Opportunity>();
         Opportunity appHighSalary = insertedApps[0];
         appHighSalary.Annual_Gross_Salary__c = 'Salary - Lowest';
@@ -212,37 +237,56 @@ public with sharing class JobApplicationTriggerTest {
         appLowSalary.Name = 'B Job App';
         appsToUpdate.add(appLowSalary);
 
-        Opportunity appNoGrossSalary = insertedApps[2];
-        appNoGrossSalary.Annual_Gross_Salary__c = null;
-        appNoGrossSalary.Name = 'C Job App';
-        appsToUpdate.add(appNoGrossSalary);
-
-        Opportunity appNoFilingStatus = insertedApps[3];
-        appNoFilingStatus.Filing_Status__c = null;
-        appNoFilingStatus.Name = 'D Job App';
-        appsToUpdate.add(appNoFilingStatus);
-
+        Test.startTest();
         Update appsToUpdate;
+        Test.stopTest();
 
         List<Opportunity> updatedApps = [SELECT Id, Name, StageName, Salary_Lowest__c, Salary_Highest__c, Annual_Gross_Salary__c, Filing_Status__c, Spouse_s_Salary__c, Federal_Income_Tax__c, Social_Security__c, Medicare__c, Take_Home_Pay__c 
                                          FROM Opportunity
                                          WHERE Id IN :appsToUpdate ORDER BY Name ASC];
         Opportunity appToCheck1 = updatedApps[0];
         Opportunity appToCheck2 = updatedApps[1];
-        Opportunity appToCheck3 = updatedApps[2];
-        Opportunity appToCheck4 = updatedApps[3];
+        
+        System.assert(appToCheck1.Federal_Income_Tax__c != null, 'Federal Income Tax was not calculated');
+        System.assert(appToCheck1.Medicare__c != null, 'Medicare was not calculated');
+        System.assert(appToCheck2.Social_Security__c != null, 'Social Security was not calculated');
+        System.assert(appToCheck2.Take_Home_Pay__c != null, 'Take Home Pay was not calculated');
+    }  
+        
+    @isTest
+    public static void testCalculateTakeHomePay_negative(){
+        List<Opportunity> insertedApps = [SELECT Id, Name, StageName, Salary_Lowest__c, Salary_Highest__c, Annual_Gross_Salary__c, Filing_Status__c, Spouse_s_Salary__c, Federal_Income_Tax__c, Social_Security__c, Medicare__c, Take_Home_Pay__c
+                                          FROM Opportunity LIMIT 2];
+        List<Opportunity> appsToUpdate = new List<Opportunity>();
+       
+        Opportunity appNoGrossSalary = insertedApps[0];
+        appNoGrossSalary.Annual_Gross_Salary__c = null;
+        appNoGrossSalary.Name = 'A Job App';
+        appsToUpdate.add(appNoGrossSalary);
+
+        Opportunity appNoFilingStatus = insertedApps[1];
+        appNoFilingStatus.Filing_Status__c = null;
+        appNoFilingStatus.Name = 'B Job App';
+        appsToUpdate.add(appNoFilingStatus);
+
+        Test.startTest();
+        Update appsToUpdate;
         Test.stopTest();
 
-        System.assert(appToCheck1.Federal_Income_Tax__c != null, 'Federal Income Tax was not calculated');
-        System.assert(appToCheck2.Social_Security__c != null, 'Social Security was not calculated');
-        System.assert(appToCheck3.Medicare__c == null, 'Medicare should have been null since Annual Gross Salary was null');
-        System.assert(appToCheck4.Federal_Income_Tax__c == null, 'Federal Income Tax should have been null since Filing Status was null');
-        
-        }                           
-    
+        List<Opportunity> updatedApps = [SELECT Id, Name, StageName, Salary_Lowest__c, Salary_Highest__c, Annual_Gross_Salary__c, Filing_Status__c, Spouse_s_Salary__c, Federal_Income_Tax__c, Social_Security__c, Medicare__c, Take_Home_Pay__c 
+                                         FROM Opportunity
+                                         WHERE Id IN :appsToUpdate ORDER BY Name ASC];
+        Opportunity appToCheck1 = updatedApps[0];
+        Opportunity appToCheck2 = updatedApps[1];
+
+        System.assert(appToCheck1.Medicare__c == null, 'Medicare should have been null since Annual Gross Salary was null');
+        System.assert(appToCheck1.Social_Security__c == null, 'Social Security should have been null since Annual Gross Salary was null');
+        System.assert(appToCheck2.Federal_Income_Tax__c == null, 'Federal Income Tax should have been null since Filing Status was null');
+        System.assert(appToCheck2.Take_Home_Pay__c == null, 'Take Home Pay should have been null since Filing Status was null');
+    }  
 
     @isTest
-    public static void testCalculateFedIncomeTaxMethod(){
+    public static void testCalculateFedIncomeTaxMethod_positive(){
         Test.startTest();
         Decimal calcFedIncomeTaxSingle = JobApplicationTriggerHelper.calculateFedIncomeTax(60000, 'Single', 0);
         Decimal calcFedIncomeTaxMarriedJoint = JobApplicationTriggerHelper.calculateFedIncomeTax(150000, 'Married filing jointly', 75000);
@@ -257,7 +301,7 @@ public with sharing class JobApplicationTriggerTest {
     }
 
     @isTest
-    public static void testFilingSingleMethod(){
+    public static void testFilingSingleMethod_positive(){
         Test.startTest();
         Decimal fedIncomeTaxSingle1 = JobApplicationTriggerHelper.filingSingle(60000); 
         Decimal fedIncomeTaxSingle2 = JobApplicationTriggerHelper.filingSingle(95000); 
@@ -272,7 +316,7 @@ public with sharing class JobApplicationTriggerTest {
     }
 
     @isTest
-    public static void testMarriedFilingJointlyMethod(){
+    public static void testMarriedFilingJointlyMethod_positive(){
         Test.startTest();
         Decimal fedIncomeTaxMarriedJoint1 = JobApplicationTriggerHelper.marriedFilingJointly(60000, 100000); 
         Decimal fedIncomeTaxMarriedJoint2 = JobApplicationTriggerHelper.marriedFilingJointly(95000, 40000); 
@@ -287,7 +331,7 @@ public with sharing class JobApplicationTriggerTest {
     }
 
     @isTest
-    public static void testMarriedFilingSeparatelyMethod(){
+    public static void testMarriedFilingSeparatelyMethod_positive(){
         Test.startTest();
         Decimal fedIncomeTaxFilingSingle1 = JobApplicationTriggerHelper.marriedFilingSeparately(40000); 
         Decimal fedIncomeTaxFilingSingle2 = JobApplicationTriggerHelper.marriedFilingSeparately(72000); 
@@ -302,7 +346,7 @@ public with sharing class JobApplicationTriggerTest {
     }
 
     @isTest
-    public static void testHeadOfHouseholdMethod(){
+    public static void testHeadOfHouseholdMethod_positive(){
         Test.startTest();
         Decimal fedIncomeTaxHeadOfHouse1 = JobApplicationTriggerHelper.headOfHousehold(30000); 
         Decimal fedIncomeTaxHeadOfHouse2 = JobApplicationTriggerHelper.headOfHousehold(72000); 
@@ -317,7 +361,7 @@ public with sharing class JobApplicationTriggerTest {
     }
 
     @isTest
-    public static void testPopulatePrimaryContactFromAccount(){
+    public static void testPopulatePrimaryContactFromAccount_positive(){
         //When a Job Application is edited, if there are no contact roles on the application, the first created contact on the account should be populated
         List<Opportunity> insertedApps = [SELECT Id, Name, Primary_Contact__c, AccountId, Filing_Status__c FROM Opportunity Limit 200];
         List<Account> insertedAccts = [SELECT Id, Name FROM Account ORDER BY Name ASC];
@@ -351,7 +395,6 @@ public with sharing class JobApplicationTriggerTest {
         Test.setCreatedDate(testFirstContact3.Id, dateTime.newInstance(2023,12,12)); 
         Test.setCreatedDate(testFirstContact5.Id, dateTime.newInstance(2024,02,12)); 
         Test.setCreatedDate(testSecondContact6.Id, dateTime.Now()-1); 
-        System.debug('created date for first contact is ' + testFirstContact1.CreatedDate);
 
         List<Opportunity> appsToUpdate = new List<Opportunity>();
         //Break out our 200 test opportunities into 3 groups based on Filing Status to be added to the 3 different accounts
@@ -367,7 +410,10 @@ public with sharing class JobApplicationTriggerTest {
                 appsToUpdate.add(app);
             }
         }
+
+        Test.startTest();
         Update appsToUpdate;
+        Test.stopTest();
 
         //Query the contact with the earliest created date for each account
         List<Opportunity> updatedJobApps =[SELECT Id, Name, Primary_Contact__c, AccountId FROM Opportunity WHERE Id IN :appsToUpdate];
@@ -378,7 +424,6 @@ public with sharing class JobApplicationTriggerTest {
         //Confirm that the primary contact on the Job Application actually is the first created contact on the account
         for(Opportunity app : updatedJobApps){
             if(app.AccountId == testAccount1.Id){
-                System.debug('first created date is ' + firstContactOnAcct1.createdDate);
                 System.assertEquals(firstContactOnAcct1.Id, app.Primary_Contact__c, 'Primary Contact was not set properly');
             } else if (app.AccountId == testAccount2.Id){
                 System.assertEquals(firstContactOnAcct2.Id, app.Primary_Contact__c, 'Primary Contact was not set properly');
@@ -389,7 +434,23 @@ public with sharing class JobApplicationTriggerTest {
     }
 
     @isTest
-    public static void testPopulatePrimaryContactFromContactRole(){
+    public static void testPopulatePrimaryContactFromAccount_negative(){
+        List<Opportunity> insertedApps = [SELECT Id, Name, Primary_Contact__c, AccountId, Filing_Status__c FROM Opportunity Limit 5];
+        Account insertedAcct = [SELECT Id, Name FROM Account LIMIT 1];
+
+        Test.startTest();
+        Opportunity firstJobApp = insertedApps[0];
+        firstJobApp.AccountId = insertedAcct.Id;
+        Update firstJobApp;
+        Test.stopTest();
+
+        Opportunity updatedJobApp = [SELECT Id, Name, Primary_Contact__c FROM Opportunity WHERE Id = :firstJobApp.Id];
+        Id primaryContact = updatedJobApp.Primary_Contact__c;
+        System.assert(primaryContact == null, 'Primary Contact on Job Application was populated but should not have been');
+    }
+
+    @isTest
+    public static void testPopulatePrimaryContactFromContactRole_positive(){
         //On a Job Application, if contact roles exist, use the "Primary" contact role for the "Primary Contact". If no contact role is "Primary", find the contact with the earliest created date
         List<Opportunity> insertedApps = [SELECT Id, Name, Primary_Contact__c, AccountId, Filing_Status__c FROM Opportunity Limit 200];
         List<Account> insertedAccts = [SELECT Id, Name FROM Account ORDER BY Name ASC];
@@ -458,8 +519,11 @@ public with sharing class JobApplicationTriggerTest {
                 appsToUpdate.add(app);
             }
         }
+
+        Test.startTest();
         Insert contactRolesToInsert;
         Update appsToUpdate;
+        Test.stopTest();
 
         //Query for the inserted contacts to make sure we have the most up to date CreatedDate
         List<Contact> insertedContacts = [SELECT Id, FirstName, LastName, AccountId, CreatedDate 

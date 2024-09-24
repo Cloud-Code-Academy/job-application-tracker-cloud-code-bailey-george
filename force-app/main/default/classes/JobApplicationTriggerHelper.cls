@@ -54,6 +54,18 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
         Insert tasksToInsert;
     }
 
+    public static void requirePositiveSalaries(List<Opportunity> jobAppsTriggered){
+        for(Opportunity jobApp : jobAppsTriggered){
+            if (jobApp.Salary_Highest__c < 0){
+                jobApp.Salary_Highest__c.addError('Salary must be a positive number');
+            } if (jobApp.Salary_Lowest__c < 0){
+                jobApp.Salary_Lowest__c.addError('Salary must be a positive number');
+            } if (jobApp.Spouse_s_salary__c < 0){
+                jobApp.Spouse_s_salary__c.addError('Spouses salary must be a positive number');
+            }
+        }
+    }
+
     public static void calculateTakeHomePay(List<Opportunity> jobAppsTriggered){
         Decimal annualSalary = 0;
         Decimal spousesSalary = 0;
