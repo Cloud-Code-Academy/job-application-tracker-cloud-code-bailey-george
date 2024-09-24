@@ -12,7 +12,7 @@
         <label>Phone Inquiry</label>
     </standardValue>
     <standardValue>
-        <fullName>Jooble</fullName>
+        <fullName>Jooble</fullName> 
         <default>false</default>
         <label>Jooble</label>
     </standardValue>

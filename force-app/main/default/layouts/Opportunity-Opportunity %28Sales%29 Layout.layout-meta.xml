@@ -81,6 +81,10 @@
                 <behavior>Edit</behavior>
                 <field>Jooble_External_Id__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Job_Posting_Date__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -188,6 +192,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Job_Work_Environment__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Job_Description__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
