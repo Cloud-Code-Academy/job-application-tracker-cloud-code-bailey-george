@@ -9,9 +9,10 @@ public with sharing class JoobleJobExtract {
         Integer page = 1;
         Integer resultOnPage = 100;
 
-        String endpoint = 'https://jooble.org/api';            
-        String callEndpoint = 'callout:JoobleAPI'; // This is a Named Credential
-        String apiKey = '616f76a6-f012-48d1-ab55-959ec666d436';
+        String callEndpoint = 'callout:JoobleAPI'; // This is a Named Credential  
+              
+        //String endpoint = 'https://jooble.org/api';            
+        //String apiKey = '616f76a6-f012-48d1-ab55-959ec666d436';
         
         String requestBody = '{ "keywords": "' + keywords + '", ' + 
                                 '"location": "' + location + '", ' + 
@@ -20,17 +21,11 @@ public with sharing class JoobleJobExtract {
                                 '"page": "' + page + '", ' +  
                                 '"resultonpage": "' + String.valueOf(resultOnPage) + '", ' +  
                                 '"companysearch": "False"}';
-        /*    
-        String requestBody = '{ "keywords": "' + keywords + '", ' + 
-                                '"location": "' + location + '", ' + 
-                                '"radius": "50",' +  
-                                '"page": "' + page + '", ' +  
-                                '"resultonpage": "' + String.valueOf(resultOnPage) + '", ' +  
-                                '"companysearch": "False"}';
-        */
+        
         HttpRequest req = new HttpRequest();
-        req.setEndpoint(endpoint + '/' + apiKey);
-        //req.setEndpoint(callEndpoint);
+        //req.setEndpoint(endpoint + '/' + apiKey);
+        req.setEndpoint(callEndpoint);   // This is a Named Credential 
+        
         req.setMethod('POST');
         req.setHeader('Content-Type', 'application/json');
         req.setBody(requestBody);
