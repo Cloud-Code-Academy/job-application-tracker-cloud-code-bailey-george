@@ -20,6 +20,8 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
         JobApplicationTriggerHelper.calculateTakeHomePay(newJobAppList);
         JobApplicationTriggerHelper.populatePrimaryContact(newJobAppList, newJobAppMap);
         JobApplicationTriggerHelper.requirePositiveSalaries(newJobAppList);
+        JobApplicationTriggerHelper.pullSalaryFromJoobleSalary(newJobAppList, oldJobAppList, newJobAppMap, oldJobAppMap);
+
     }
 
     public override void afterInsert(){

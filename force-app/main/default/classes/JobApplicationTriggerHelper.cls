@@ -54,6 +54,43 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
         Insert tasksToInsert;
     }
 
+    public static void pullSalaryFromJoobleSalary(List<Opportunity> jobAppsTriggered, List<Opportunity> oldJobAppsTriggered, Map<Id, Opportunity> newJobAppMapTrigg, Map<Id, Opportunity> oldJobAppMapTrigg){
+        String regex = '[^0-9.]';
+        String oldJoobleSalary = null;
+        String newJoobleSalary = null;
+
+        for(Opportunity jobApp : jobAppsTriggered){
+            Opportunity oldApp = oldJobAppMapTrigg.get(jobApp.Id);
+            oldJoobleSalary = oldApp.Jooble_Salary__c;
+            newJoobleSalary = jobApp.Jooble_Salary__c;
+            if(oldJoobleSalary != newJoobleSalary && !String.isEmpty(newJoobleSalary)){
+                if(newJoobleSalary.contains('/hr') || newJoobleSalary.contains('/hour')) {
+                    Decimal workHrsPerYr = 2080;
+                    try {
+                        jobApp.Salary_Lowest__c = Decimal.valueOf(newJoobleSalary.replaceAll(regex,'').substringBefore('/').deleteWhiteSpace()) * workHrsPerYr;
+                    } catch (Exception e) {
+                        // Handle any potential exceptions
+                        jobApp.Salary_Lowest__c = null;
+                    }
+                } else if (newJoobleSalary.contains('k')){
+                    try {
+                        jobApp.Salary_Lowest__c = Decimal.valueOf(newJoobleSalary.replaceAll(regex,'').substringBefore('k').deleteWhiteSpace()) * 1000;
+                    } catch (Exception e) {
+                        // Handle any potential exceptions
+                        jobApp.Salary_Lowest__c = null;
+                    }
+                } else {
+                    try {
+                        jobApp.Salary_Lowest__c = Decimal.valueOf(newJoobleSalary.replaceAll(regex,'').deleteWhiteSpace());
+                    } catch (Exception e) {
+                        // Handle any potential exceptions
+                        jobApp.Salary_Lowest__c = null;
+                    }
+                }
+            }
+        }
+    }
+
     public static void requirePositiveSalaries(List<Opportunity> jobAppsTriggered){
         for(Opportunity jobApp : jobAppsTriggered){
             if (jobApp.Salary_Highest__c < 0){
