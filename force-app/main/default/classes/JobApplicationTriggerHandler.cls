@@ -14,6 +14,7 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
     public override void beforeInsert(){
         JobApplicationTriggerHelper.setStatusToSaved(newJobAppList);  
         JobApplicationTriggerHelper.requirePositiveSalaries(newJobAppList);
+        JobApplicationTriggerHelper.pullSalaryFromJoobleSalary(newJobAppList);
     }
 
     public override void beforeUpdate(){
