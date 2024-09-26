@@ -63,7 +63,9 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
 
         for(Opportunity jobApp : jobAppsTriggered){
             joobleSalary = jobApp.Jooble_Salary__c;
-            if (joobleSalary != null && (joobleSalary.contains('per hour') || joobleSalary.contains('per hr') || joobleSalary.contains('/hour') || joobleSalary.contains('/hr'))){
+            if(joobleSalary == null){
+                minSalaryDecimal = null;
+            } else if (joobleSalary != null && (joobleSalary.contains('per hour') || joobleSalary.contains('per hr') || joobleSalary.contains('/hour') || joobleSalary.contains('/hr'))){
                 minSalaryDecimal = JobApplicationTriggerHelper.processStringFromHourlyRate(joobleSalary);
             } else if (joobleSalary != null && (joobleSalary.contains('k')||joobleSalary.contains('K'))){
                 minSalaryDecimal = JobApplicationTriggerHelper.processStringFromKSalary(joobleSalary);
