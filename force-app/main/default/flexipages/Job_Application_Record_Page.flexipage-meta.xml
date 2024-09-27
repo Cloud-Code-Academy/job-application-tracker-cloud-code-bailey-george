@@ -100,7 +100,7 @@
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
-                    <value>none</value>
+                    <value>readonly</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.Primary_Contact__c</fieldItem>
                 <identifier>RecordPrimary_Contact_cField2</identifier>
