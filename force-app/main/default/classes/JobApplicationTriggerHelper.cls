@@ -56,6 +56,29 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
         Insert tasksToInsert;
     }
 
+    public static void updateFieldWhenStageChanges(List<Opportunity> jobAppsTriggered, List<Opportunity> oldJobAppsTriggered, Map<Id, Opportunity> newJobAppMapTrigg, Map<Id, Opportunity> oldJobAppMapTrigg){
+        for (Opportunity jobApp : jobAppsTriggered){
+            Opportunity oldJobApp = oldJobAppMapTrigg.get(jobApp.Id);
+            if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Applied'){
+                jobApp.NextStep = 'Follow Up on Application';
+                jobApp.Application_Date__c = Date.today();
+                jobApp.Follow_Up_Date__c = Date.today().addDays(7);
+            }
+            if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Interviewing'){
+                jobApp.NextStep = 'Research Company';
+            }
+            if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Negotiating'){
+                jobApp.NextStep = 'Evaluate Offer';
+            }
+            if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Accepted'){
+                jobApp.NextStep = 'Prepare for Onboarding';
+            }
+            if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Closed'){
+                jobApp.NextStep = 'Closed';
+            }
+        }
+    }
+
     public static void pullSalaryFromJoobleSalary(List<Opportunity> jobAppsTriggered){
         String regex = '[^0-9.]';
         String joobleSalary = null;
@@ -63,24 +86,24 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
 
         for(Opportunity jobApp : jobAppsTriggered){
             joobleSalary = jobApp.Jooble_Salary__c;
-            if(joobleSalary == null){
-                minSalaryDecimal = null;
-            } else if (joobleSalary != null && (joobleSalary.contains('per hour') || joobleSalary.contains('per hr') || joobleSalary.contains('/hour') || joobleSalary.contains('/hr'))){
+            if(joobleSalary != null && jobApp.Salary_Lowest__c == null && joobleSalary.containsAny('0123456789')){
+                if ((joobleSalary.contains('per hour') || joobleSalary.contains('per hr') || joobleSalary.contains('/hour') || joobleSalary.contains('/hr'))){
                 minSalaryDecimal = JobApplicationTriggerHelper.processStringFromHourlyRate(joobleSalary);
-            } else if (joobleSalary != null && (joobleSalary.contains('k')||joobleSalary.contains('K'))){
+                } else if ((joobleSalary.contains('k')||joobleSalary.contains('K'))){
                 minSalaryDecimal = JobApplicationTriggerHelper.processStringFromKSalary(joobleSalary);
-            } else if (joobleSalary != null && joobleSalary.contains('-')) {
+                } else if (joobleSalary.contains('-')) {
                 minSalaryDecimal = Decimal.valueOf(joobleSalary.substringBefore('-').replaceAll(regex, '').deleteWhiteSpace());
-            } else {
+                } else {
                 minSalaryDecimal = Decimal.valueOf(joobleSalary.replaceAll(regex,'').deleteWhiteSpace());
-            }
+                }
 
-            //Try catch block to set the found salary in the "Salary - Lowest" field
-            try {
-                jobApp.Salary_Lowest__c = minSalaryDecimal;
-            } catch (Exception e) {
+                //Try catch block to set the found salary in the "Salary - Lowest" field
+                try {
+                    jobApp.Salary_Lowest__c = minSalaryDecimal;
+                } catch (Exception e) {
                 // Handle any potential exceptions
-                jobApp.Salary_Lowest__c = null;
+                    jobApp.Salary_Lowest__c = null;
+                }
             }
         }
     }
@@ -140,7 +163,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
         Decimal annualSalary = 0;
         Decimal spousesSalary = 0;
         for (Opportunity jobApp : jobAppsTriggered){
-            //If the "Salary - Lowest" field is populated and "Annual Gross Salary" is set to "Salary - Lowest", calculations should occur
+            //If the "Salary - Lowest" field is populated and "Annual Gross Salary" is set to "Salary - Lowest", calculations occur
             if (jobApp.annual_gross_salary__c != null && jobApp.Salary_Lowest__c != null && jobApp.Annual_Gross_Salary__c == 'Salary - Lowest' && jobApp.Filing_Status__c != null){
                 spousesSalary = jobApp.Spouse_s_Salary__c;
                 annualSalary = jobApp.Salary_Lowest__c;
@@ -150,7 +173,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
                 jobApp.Social_Security__c = annualSalary * .062;
                 jobApp.Take_Home_Pay__c = annualSalary - (fedIncomeTax + jobApp.Medicare__c + jobApp.Social_Security__c);
             }
-            //If the "Salary - Highest" field is populated and "Annual Gross Salary" is set to "Salary - Highest", calculations should occur 
+            //If the "Salary - Highest" field is populated and "Annual Gross Salary" is set to "Salary - Highest", calculations occur 
             else if (jobApp.Annual_Gross_salary__c != null && jobApp.Salary_Highest__c != null && jobApp.Annual_Gross_Salary__c == 'Salary - Highest' && jobApp.Filing_Status__c != null){
                 spousesSalary = jobApp.Spouse_s_Salary__c;
                 annualSalary = jobApp.Salary_Highest__c;
@@ -305,7 +328,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
 
         Map<Id, OpportunityContactRole> notPrimaryContactRolesById = new Map<Id, OpportunityContactRole>([SELECT Id, ContactId, IsPrimary, OpportunityId 
                                                                                                           FROM OpportunityContactRole 
-                                                                                                          WHERE (isPrimary = false) AND (OpportunityId IN :newJobAppMapTrigg.values()) ORDER BY CreatedDate ASC]);
+                                                                                                          WHERE (isPrimary = false) AND (OpportunityId IN :newJobAppMapTrigg.values()) ORDER BY Contact.CreatedDate ASC]);
         Map<Id, Id> notPrimaryContactIdByAppId = new Map<Id, Id>();
         for(Id appContact : notPrimaryContactRolesById.keySet()){
             Id appId = notPrimaryContactRolesById.get(appContact).OpportunityId;
@@ -347,6 +370,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
             }
         }
     }
+
 }
 
 
