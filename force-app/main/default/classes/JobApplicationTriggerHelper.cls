@@ -23,37 +23,60 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
             Opportunity oldJobApp = oldJobAppMapTrigg.get(jobApp.Id);
             //Create task specific to the stage the Job Application is changed to
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Applying'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Applying', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Applying', Priority = 'High');
                 newTask.Description = 'Find and research someone who works at the company and add them as a contact \nSet up an informational interview to learn more about the role/company\nIdentify potential referrals to help get your application on the top of the pile\nCustomize your work achievements using the job description keywords\nSubmit your application on the company website if possible';
                 tasksToInsert.add(newTask);
             }
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Applied'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks after Applied', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks after Applied', Priority = 'High');
                 newTask.Description = 'Reach out to the hiring manager or recruiter\nFollow up on your application via email weekly\nContinue identifying and saving similar job opportunities\nSet up weekly networking calls to explore similar companies/roles';
                 tasksToInsert.add(newTask);
             }
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Interviewing'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Interviewing', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Interviewing', Priority = 'High');
                 newTask.Description = 'Prepare your blurb or “tell me about yourself” response\nPractice answering behavioral interview questions\nResearch the company and your interviewers\nSet up your virtual interview space and test your tech\nSend thank you emails within 24 hours';
                 tasksToInsert.add(newTask);
             }
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Negotiating'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Negotiating', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Negotiating', Priority = 'High');
                 newTask.Description = 'Research your market value and know your numbers\nPrepare your negotiation scripts\nEvaluate your offer and decline or accept';
                 tasksToInsert.add(newTask);
             }
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Accepted'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks once Accepted', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks once Accepted', Priority = 'High');
                 newTask.Description = 'Plan your resignation if applicable\nTake some time to relax and recharge\nPrepare for your first day of onboarding';
                 tasksToInsert.add(newTask);
             }
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Closed'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Closed', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Closed', Priority = 'High');
                 newTask.Description = 'Send a follow-up email thanking the interviewer and asking for feedback\nReview your notes and reflect on areas of improvement';
                 tasksToInsert.add(newTask);
             }
         }
         Insert tasksToInsert;
+    }
+
+    public static void updateFieldWhenStageChanges(List<Opportunity> jobAppsTriggered, List<Opportunity> oldJobAppsTriggered, Map<Id, Opportunity> newJobAppMapTrigg, Map<Id, Opportunity> oldJobAppMapTrigg){
+        for (Opportunity jobApp : jobAppsTriggered){
+            Opportunity oldJobApp = oldJobAppMapTrigg.get(jobApp.Id);
+            if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Applied'){
+                jobApp.NextStep = 'Follow Up on Application';
+                jobApp.Application_Date__c = Date.today();
+                jobApp.Follow_Up_Date__c = Date.today().addDays(7);
+            }
+            if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Interviewing'){
+                jobApp.NextStep = 'Research Company';
+            }
+            if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Negotiating'){
+                jobApp.NextStep = 'Evaluate Offer';
+            }
+            if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Accepted'){
+                jobApp.NextStep = 'Prepare for Onboarding';
+            }
+            if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Closed'){
+                jobApp.NextStep = 'Closed';
+            }
+        }
     }
 
     public static void pullSalaryFromJoobleSalary(List<Opportunity> jobAppsTriggered){
@@ -63,24 +86,24 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
 
         for(Opportunity jobApp : jobAppsTriggered){
             joobleSalary = jobApp.Jooble_Salary__c;
-            if(joobleSalary == null){
-                minSalaryDecimal = null;
-            } else if (joobleSalary != null && (joobleSalary.contains('per hour') || joobleSalary.contains('per hr') || joobleSalary.contains('/hour') || joobleSalary.contains('/hr'))){
+            if(joobleSalary != null && jobApp.Salary_Lowest__c == null && joobleSalary.containsAny('0123456789')){
+                if ((joobleSalary.contains('per hour') || joobleSalary.contains('per hr') || joobleSalary.contains('/hour') || joobleSalary.contains('/hr'))){
                 minSalaryDecimal = JobApplicationTriggerHelper.processStringFromHourlyRate(joobleSalary);
-            } else if (joobleSalary != null && (joobleSalary.contains('k')||joobleSalary.contains('K'))){
+                } else if ((joobleSalary.contains('k')||joobleSalary.contains('K'))){
                 minSalaryDecimal = JobApplicationTriggerHelper.processStringFromKSalary(joobleSalary);
-            } else if (joobleSalary != null && joobleSalary.contains('-')) {
+                } else if (joobleSalary.contains('-')) {
                 minSalaryDecimal = Decimal.valueOf(joobleSalary.substringBefore('-').replaceAll(regex, '').deleteWhiteSpace());
-            } else {
+                } else {
                 minSalaryDecimal = Decimal.valueOf(joobleSalary.replaceAll(regex,'').deleteWhiteSpace());
-            }
+                }
 
-            //Try catch block to set the found salary in the "Salary - Lowest" field
-            try {
-                jobApp.Salary_Lowest__c = minSalaryDecimal;
-            } catch (Exception e) {
+                //Try catch block to set the found salary in the "Salary - Lowest" field
+                try {
+                    jobApp.Salary_Lowest__c = minSalaryDecimal;
+                } catch (Exception e) {
                 // Handle any potential exceptions
-                jobApp.Salary_Lowest__c = null;
+                    jobApp.Salary_Lowest__c = null;
+                }
             }
         }
     }
@@ -140,7 +163,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
         Decimal annualSalary = 0;
         Decimal spousesSalary = 0;
         for (Opportunity jobApp : jobAppsTriggered){
-            //If the "Salary - Lowest" field is populated and "Annual Gross Salary" is set to "Salary - Lowest", calculations should occur
+            //If the "Salary - Lowest" field is populated and "Annual Gross Salary" is set to "Salary - Lowest", calculations occur
             if (jobApp.annual_gross_salary__c != null && jobApp.Salary_Lowest__c != null && jobApp.Annual_Gross_Salary__c == 'Salary - Lowest' && jobApp.Filing_Status__c != null){
                 spousesSalary = jobApp.Spouse_s_Salary__c;
                 annualSalary = jobApp.Salary_Lowest__c;
@@ -150,7 +173,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
                 jobApp.Social_Security__c = annualSalary * .062;
                 jobApp.Take_Home_Pay__c = annualSalary - (fedIncomeTax + jobApp.Medicare__c + jobApp.Social_Security__c);
             }
-            //If the "Salary - Highest" field is populated and "Annual Gross Salary" is set to "Salary - Highest", calculations should occur 
+            //If the "Salary - Highest" field is populated and "Annual Gross Salary" is set to "Salary - Highest", calculations occur 
             else if (jobApp.Annual_Gross_salary__c != null && jobApp.Salary_Highest__c != null && jobApp.Annual_Gross_Salary__c == 'Salary - Highest' && jobApp.Filing_Status__c != null){
                 spousesSalary = jobApp.Spouse_s_Salary__c;
                 annualSalary = jobApp.Salary_Highest__c;
@@ -305,7 +328,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
 
         Map<Id, OpportunityContactRole> notPrimaryContactRolesById = new Map<Id, OpportunityContactRole>([SELECT Id, ContactId, IsPrimary, OpportunityId 
                                                                                                           FROM OpportunityContactRole 
-                                                                                                          WHERE (isPrimary = false) AND (OpportunityId IN :newJobAppMapTrigg.values()) ORDER BY CreatedDate ASC]);
+                                                                                                          WHERE (isPrimary = false) AND (OpportunityId IN :newJobAppMapTrigg.values()) ORDER BY Contact.CreatedDate ASC]);
         Map<Id, Id> notPrimaryContactIdByAppId = new Map<Id, Id>();
         for(Id appContact : notPrimaryContactRolesById.keySet()){
             Id appId = notPrimaryContactRolesById.get(appContact).OpportunityId;
@@ -347,6 +370,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
             }
         }
     }
+
 }
 
 
