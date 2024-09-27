@@ -223,28 +223,115 @@ public with sharing class JobApplicationTriggerTest {
     }
 
     @isTest
+    public static void testPullSalaryFromJoobleSalary_positive(){
+        Opportunity newApp1 = new Opportunity(Name = 'Test Application1', LeadSource = 'Jooble', Jooble_Salary__c = '80k', CloseDate = Date.Today(), StageName = 'Saved');
+        Opportunity newApp2 = new Opportunity(Name = 'Test Application2', LeadSource = 'Jooble', Jooble_Salary__c = '40/hr - 50/hr', CloseDate = Date.Today(), StageName = 'Saved');
+
+        Test.startTest();
+        insert newApp1;
+        insert newApp2;
+        Test.stopTest();
+
+        Opportunity updatedApp1 = [SELECT Id, Name, Salary_Lowest__c FROM Opportunity WHERE Id = :newApp1.Id];
+        Opportunity updatedApp2 = [SELECT Id, Name, Salary_Lowest__c FROM Opportunity WHERE Id = :newApp2.Id];
+        System.assertEquals(80000, updatedApp1.Salary_Lowest__c);
+        System.assertEquals(83200, updatedApp2.Salary_Lowest__c);
+    }
+
+    @isTest
+    public static void testPullSalaryFromJoobleSalary_negative(){
+        Opportunity newApp1 = new Opportunity(Name = 'Test Application1', LeadSource = 'Jooble', CloseDate = Date.Today(), StageName = 'Saved');
+        Opportunity newApp2 = new Opportunity(Name = 'Test Application2', LeadSource = 'Jooble', Jooble_Salary__c = 'None', CloseDate = Date.Today(), StageName = 'Saved');
+
+        Test.startTest();
+        insert newApp1;
+        insert newApp2;
+        Test.stopTest();
+
+        Opportunity updatedApp1 = [SELECT Id, Name, Salary_Lowest__c FROM Opportunity WHERE Id = :newApp1.Id];
+        Opportunity updatedApp2 = [SELECT Id, Name, Salary_Lowest__c FROM Opportunity WHERE Id = :newApp2.Id];
+        System.assert(updatedApp1.Salary_Lowest__c == null);
+        System.assert(updatedApp2.Salary_Lowest__c == null);
+    }
+
+    @isTest
+    public static void testProcessStringFromHourlyRate_positive(){
+        String salaryToProcess1 = '70 /hr';
+        String salaryToProcess2 = '$32 per hour';
+        String salaryToProcess3 = '$41-50 per hour';
+        String salaryToProcess4 = '20/hr - 25/hr';
+
+        Decimal processedSalary1;
+        Decimal processedSalary2;
+        Decimal processedSalary3; 
+        Decimal processedSalary4;
+
+        Test.startTest();
+        processedSalary1 = JobApplicationTriggerHelper.processStringFromHourlyRate(salaryToProcess1);
+        processedSalary2 = JobApplicationTriggerHelper.processStringFromHourlyRate(salaryToProcess2);
+        processedSalary3 = JobApplicationTriggerHelper.processStringFromHourlyRate(salaryToProcess3);
+        processedSalary4 = JobApplicationTriggerHelper.processStringFromHourlyRate(salaryToProcess4);
+        Test.stopTest();
+
+        System.assertEquals(145600, processedSalary1, 'Hourly salary was not processed properly');
+        System.assertEquals(66560, processedSalary2, 'Hourly salary was not processed properly');
+        System.assertEquals(85280, processedSalary3, 'Hourly salary was not processed properly');
+        System.assertEquals(41600, processedSalary4, 'Hourly salary was not processed properly');
+    }
+
+    @isTest
+    public static void testProcessStringFromKSalary_positive(){
+        String salaryToProcess1 = '70k';
+        String salaryToProcess2 = '55K';
+        String salaryToProcess3 = '$75k-85K';
+        String salaryToProcess4 = '80 - 90k / yr';
+
+        Decimal processedSalary1;
+        Decimal processedSalary2;
+        Decimal processedSalary3; 
+        Decimal processedSalary4;
+
+        Test.startTest();
+        processedSalary1 = JobApplicationTriggerHelper.processStringFromKSalary(salaryToProcess1);
+        processedSalary2 = JobApplicationTriggerHelper.processStringFromKSalary(salaryToProcess2);
+        processedSalary3 = JobApplicationTriggerHelper.processStringFromKSalary(salaryToProcess3);
+        processedSalary4 = JobApplicationTriggerHelper.processStringFromKSalary(salaryToProcess4);
+        Test.stopTest();
+
+        System.assertEquals(70000, processedSalary1, 'Hourly salary was not processed properly');
+        System.assertEquals(55000, processedSalary2, 'Hourly salary was not processed properly');
+        System.assertEquals(75000, processedSalary3, 'Hourly salary was not processed properly');
+        System.assertEquals(80000, processedSalary4, 'Hourly salary was not processed properly');
+    }
+
+    @isTest
     public static void testCalculateTakeHomePay_positive(){
         List<Opportunity> insertedApps = [SELECT Id, Name, StageName, Salary_Lowest__c, Salary_Highest__c, Annual_Gross_Salary__c, Filing_Status__c, Spouse_s_Salary__c, Federal_Income_Tax__c, Social_Security__c, Medicare__c, Take_Home_Pay__c
                                           FROM Opportunity LIMIT 2];
         List<Opportunity> appsToUpdate = new List<Opportunity>();
+        //Designate a Job Application for testing if we choose "Salary - Highest" to calculate
         Opportunity appHighSalary = insertedApps[0];
-        appHighSalary.Annual_Gross_Salary__c = 'Salary - Lowest';
+        System.debug('app high salary high salary is ' + appHighSalary.Salary_Highest__c);
+        appHighSalary.Annual_Gross_Salary__c = 'Salary - Highest';
         appHighSalary.Name = 'A Job App';
         appsToUpdate.add(appHighSalary);
 
+        //Designate a Job Application for testing if we choose "Salary - Lowest" to calculate
         Opportunity appLowSalary = insertedApps[1];
-        appLowSalary.Annual_Gross_Salary__c = 'Salary - Highest';
+        System.debug('app low salary high salary is ' + appLowSalary.Salary_Lowest__c);
+        appLowSalary.Annual_Gross_Salary__c = 'Salary - Lowest';
         appLowSalary.Name = 'B Job App';
         appsToUpdate.add(appLowSalary);
 
         Test.startTest();
         Update appsToUpdate;
         Test.stopTest();
-
+        
         List<Opportunity> updatedApps = [SELECT Id, Name, StageName, Salary_Lowest__c, Salary_Highest__c, Annual_Gross_Salary__c, Filing_Status__c, Spouse_s_Salary__c, Federal_Income_Tax__c, Social_Security__c, Medicare__c, Take_Home_Pay__c 
                                          FROM Opportunity
                                          WHERE Id IN :appsToUpdate ORDER BY Name ASC];
         Opportunity appToCheck1 = updatedApps[0];
+        System.debug('appToCheck1 is ' + appToCheck1 + ' and the fed income tax is ' + appToCheck1.Federal_Income_Tax__c + ' and the salary highest is ' + appToCheck1.Salary_Highest__c + 'salary lowest is ' + appToCheck1.Salary_Lowest__c);
         Opportunity appToCheck2 = updatedApps[1];
         
         System.assert(appToCheck1.Federal_Income_Tax__c != null, 'Federal Income Tax was not calculated');
@@ -507,7 +594,7 @@ public with sharing class JobApplicationTriggerTest {
                 contactRolesToInsert.add(contactRoleToCreate4);
                 app.AccountId = testAccount3.Id;
                 appsToUpdate.add(app);
-            } else {
+            } else if (app.Filing_Status__c == 'Married Filing Separately' || app.Filing_Status__c == 'Head of Household'){
                 //In Scenario 3, there are 3 contact roles on the application with varying created dates. No contact is designated as the "Primary" so the first created contact (testFirstContact5) should be set as the "Primary Contact"
                 OpportunityContactRole contactRoleToCreate5 = new OpportunityContactRole(ContactId = testFirstContact5.Id, isPrimary = false, OpportunityId = app.Id);
                 OpportunityContactRole contactRoleToCreate6 = new OpportunityContactRole(ContactId = testSecondContact6.Id, isPrimary = false, OpportunityId = app.Id);
@@ -529,21 +616,25 @@ public with sharing class JobApplicationTriggerTest {
         List<Contact> insertedContacts = [SELECT Id, FirstName, LastName, AccountId, CreatedDate 
                                           FROM Contact 
                                           WHERE Id IN :contactsToInsert ORDER BY FirstName ASC];
+        //Scenario 1
         testFirstContact1 = insertedContacts[0];
         testSecondContact2 = insertedContacts[1];
+        //Scenario 2
         testFirstContact3 = insertedContacts[2];
         testSecondContact4 = insertedContacts[3];
+        //Scenario 3
         testFirstContact5 = insertedContacts[4];
         testSecondContact6 = insertedContacts[5];
         testThirdContact7 = insertedContacts[6];
     
         List<Opportunity> updatedJobApps =[SELECT Id, Name, Primary_Contact__c, Filing_Status__c FROM Opportunity WHERE Id IN :appsToUpdate];
         for(Opportunity app : updatedJobApps){
+            System.debug('entering final loop' + app);
             if(app.Filing_Status__c == 'Single'){
-                System.assertEquals(testSecondContact2.Id, app.Primary_Contact__c, 'Primary Contact for first scenario was not set properly');                
+                System.assertEquals(testSecondContact2.Id, app.Primary_Contact__c, 'Primary Contact for first scenario was not set properly');             
             } else if (app.Filing_Status__c == 'Married Filing Jointly'){
                 System.assertEquals(testFirstContact3.Id, app.Primary_Contact__c, 'Primary Contact for second scenario was not set properly');
-            } else {
+            } else if (app.Filing_Status__c == 'Married Filing Separately' || app.Filing_Status__c == 'Head of Household') {
                 System.assertEquals(testFirstContact5.Id, app.Primary_Contact__c,'Primary Contact for third scenario was not set properly');
             }
         }
