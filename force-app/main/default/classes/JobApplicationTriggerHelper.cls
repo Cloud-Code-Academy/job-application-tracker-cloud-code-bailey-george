@@ -23,32 +23,32 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
             Opportunity oldJobApp = oldJobAppMapTrigg.get(jobApp.Id);
             //Create task specific to the stage the Job Application is changed to
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Applying'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Applying', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Applying', Priority = 'High');
                 newTask.Description = 'Find and research someone who works at the company and add them as a contact \nSet up an informational interview to learn more about the role/company\nIdentify potential referrals to help get your application on the top of the pile\nCustomize your work achievements using the job description keywords\nSubmit your application on the company website if possible';
                 tasksToInsert.add(newTask);
             }
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Applied'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks after Applied', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks after Applied', Priority = 'High');
                 newTask.Description = 'Reach out to the hiring manager or recruiter\nFollow up on your application via email weekly\nContinue identifying and saving similar job opportunities\nSet up weekly networking calls to explore similar companies/roles';
                 tasksToInsert.add(newTask);
             }
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Interviewing'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Interviewing', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Interviewing', Priority = 'High');
                 newTask.Description = 'Prepare your blurb or “tell me about yourself” response\nPractice answering behavioral interview questions\nResearch the company and your interviewers\nSet up your virtual interview space and test your tech\nSend thank you emails within 24 hours';
                 tasksToInsert.add(newTask);
             }
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Negotiating'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Negotiating', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Negotiating', Priority = 'High');
                 newTask.Description = 'Research your market value and know your numbers\nPrepare your negotiation scripts\nEvaluate your offer and decline or accept';
                 tasksToInsert.add(newTask);
             }
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Accepted'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks once Accepted', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks once Accepted', Priority = 'High');
                 newTask.Description = 'Plan your resignation if applicable\nTake some time to relax and recharge\nPrepare for your first day of onboarding';
                 tasksToInsert.add(newTask);
             }
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Closed'){
-                Task newTask = new Task(whatId = jobApp.Id, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Closed', Priority = 'High');
+                Task newTask = new Task(whatId = jobApp.Id, whoId = jobApp.Primary_Contact__c, ActivityDate = Date.today().addDays(1), Subject = 'Job Application Tasks when Closed', Priority = 'High');
                 newTask.Description = 'Send a follow-up email thanking the interviewer and asking for feedback\nReview your notes and reflect on areas of improvement';
                 tasksToInsert.add(newTask);
             }
