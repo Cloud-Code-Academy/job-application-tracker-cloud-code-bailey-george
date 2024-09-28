@@ -311,14 +311,12 @@ public with sharing class JobApplicationTriggerTest {
         List<Opportunity> appsToUpdate = new List<Opportunity>();
         //Designate a Job Application for testing if we choose "Salary - Highest" to calculate
         Opportunity appHighSalary = insertedApps[0];
-        System.debug('app high salary high salary is ' + appHighSalary.Salary_Highest__c);
         appHighSalary.Annual_Gross_Salary__c = 'Salary - Highest';
         appHighSalary.Name = 'A Job App';
         appsToUpdate.add(appHighSalary);
 
         //Designate a Job Application for testing if we choose "Salary - Lowest" to calculate
         Opportunity appLowSalary = insertedApps[1];
-        System.debug('app low salary high salary is ' + appLowSalary.Salary_Lowest__c);
         appLowSalary.Annual_Gross_Salary__c = 'Salary - Lowest';
         appLowSalary.Name = 'B Job App';
         appsToUpdate.add(appLowSalary);
@@ -331,7 +329,6 @@ public with sharing class JobApplicationTriggerTest {
                                          FROM Opportunity
                                          WHERE Id IN :appsToUpdate ORDER BY Name ASC];
         Opportunity appToCheck1 = updatedApps[0];
-        System.debug('appToCheck1 is ' + appToCheck1 + ' and the fed income tax is ' + appToCheck1.Federal_Income_Tax__c + ' and the salary highest is ' + appToCheck1.Salary_Highest__c + 'salary lowest is ' + appToCheck1.Salary_Lowest__c);
         Opportunity appToCheck2 = updatedApps[1];
         
         System.assert(appToCheck1.Federal_Income_Tax__c != null, 'Federal Income Tax was not calculated');
