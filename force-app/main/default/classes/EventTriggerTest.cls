@@ -20,49 +20,99 @@
  * See the Apex Language Reference for more information about Testing and Code Coverage.
  */
 @isTest
-public class EventTriggerTest {
+private class EventTriggerTest {
+
+    @testSetup
+    static void setup() {
+        // Create test data
+        Account testAccount = new Account(Name = 'Test Account');
+        insert testAccount;
+
+        Contact testContact = new Contact(FirstName = 'Test', LastName = 'Contact', AccountId = testAccount.Id);
+        insert testContact;
+
+        Opportunity testOpportunity = new Opportunity(Name = 'Test Opportunity', AccountId = testAccount.Id, 
+                                                    StageName = 'Saved', CloseDate = Date.today().addDays(30), 
+                                                    Salary_Lowest__c = 50000, Primary_Contact__c = testContact.Id, 
+                                                    URL__c = 'http://test.com');
+        insert testOpportunity;
+
+        User testUser = [SELECT Id FROM User WHERE Profile.Name = 'System Administrator' LIMIT 1];
+        
+    }
+
     @isTest
     static void testNoOverlap() {
+        // Create DateTime fields
+        DateTime currentDateTime = DateTime.now();                          //09/28/2024 3:00 pm
+        DateTime startDateTime1 = currentDateTime.addDays(1).addHours(1);   //09/29/2024 4:00 pm
+        DateTime endDateTime1 = startDateTime1.addHours(1);                 //09/29/2024 5:00 pm
 
-        Date tomorrow = Date.today().addDays(1);
+        DateTime startDateTime2 = startDateTime1.addHours(1);               //09/29/2024 5:00 pm
+        DateTime endDateTime2 = startDateTime2.addHours(1);                 //09/29/2024 6:00 pm
+
+        // Output the DateTime fields for verification
+        
+        System.debug('************* ');
+        System.debug('TestNoOverlap: ');
+        System.debug('StartDateTime1: ' + startDateTime1 + ' EndDateTime1: ' + endDateTime1);
+        System.debug('StartDateTime2: ' + startDateTime2 + ' EndDateTime2: ' + endDateTime2);    
 
         // Create an event that does not overlap
         Event event1 = new Event(
             Subject = 'Interview 1',
-            StartDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 10, 0, 0),
-            EndDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 11, 0, 0)
+            StartDateTime = StartDateTime1,
+            EndDateTime   = StartDateTime1
         );
         insert event1;
 
         // Create another event that does not overlap
         Event event2 = new Event(
             Subject = 'Interview 2',
-            StartDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 12, 0, 0),
-            EndDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 13, 0, 0)
+            StartDateTime = StartDateTime2,
+            EndDateTime   = StartDateTime2
         );
         insert event2;
 
         // Verify that both events were inserted successfully
         System.assertEquals(2, [SELECT COUNT() FROM Event WHERE Subject LIKE 'Interview%']);
     }
+        
 
     @isTest
     static void testOverlap() {
-        Date tomorrow = Date.today().addDays(1);
+
+        // Create DateTime fields
+        DateTime currentDateTime = DateTime.now();                          //09/28/2024 3:00 pm
+        DateTime startDateTime1 = currentDateTime.addDays(1).addHours(1);   //09/29/2024 4:00 pm
+        DateTime endDateTime1 = startDateTime1.addHours(1);                 //09/29/2024 5:00 pm
+
+        DateTime startDateTime2 = startDateTime1.addHours(1);               //09/29/2024 5:00 pm
+        DateTime endDateTime2 = startDateTime2.addHours(1);                 //09/29/2024 6:00 pm
+
+        DateTime startDateTime3 = startDateTime1.addMinutes(30);            //09/29/2024 4:30 pm
+        DateTime endDateTime3 = startDateTime3.addHours(1);                 //09/29/2024 5:30 pm
+
+        // Output the DateTime fields for verification
+        System.debug('************* ');
+        System.debug('TestOverlap: ');
+        System.debug('StartDateTime1: ' + startDateTime1 + ' EndDateTime1: ' + endDateTime1);
+        System.debug('StartDateTime2: ' + startDateTime2 + ' EndDateTime2: ' + endDateTime2);
+        System.debug('StartDateTime3: ' + startDateTime3 + ' EndDateTime3: ' + endDateTime3);
 
         // Create an event
         Event event1 = new Event(
             Subject = 'Interview 1',
-            StartDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 10, 0, 0),
-            EndDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 11, 0, 0)
+            StartDateTime = StartDateTime1,
+            EndDateTime   = endDateTime1
         );
         insert event1;
 
         // Create another event that overlaps with the first event
         Event event2 = new Event(
             Subject = 'Interview 2',
-            StartDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 10, 30, 0),
-            EndDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 11, 30, 0)
+            StartDateTime = StartDateTime3,
+            EndDateTime   = endDateTime3
         );
 
         // Try to insert the overlapping event and catch the exception
@@ -76,27 +126,45 @@ public class EventTriggerTest {
     
     @isTest
     static void testUpdateOverlap() {
-        Date tomorrow = Date.today().addDays(1);
+
+        // Create DateTime fields
+        DateTime currentDateTime = DateTime.now();                          //09/28/2024 3:00 pm
+        DateTime startDateTime1 = currentDateTime.addDays(1).addHours(1);   //09/29/2024 4:00 pm
+        DateTime endDateTime1 = startDateTime1.addHours(1);                 //09/29/2024 5:00 pm
+
+        DateTime startDateTime2 = startDateTime1.addHours(1);               //09/29/2024 5:00 pm
+        DateTime endDateTime2 = startDateTime2.addHours(1);                 //09/29/2024 6:00 pm
+
+        DateTime startDateTime3 = startDateTime1.addMinutes(30);            //09/29/2024 4:30 pm
+        DateTime endDateTime3 = startDateTime3.addHours(1);                 //09/29/2024 5:30 pm
+
+        // Output the DateTime fields for verification
+        
+        System.debug('************* ');
+        System.debug('testUpdateOverlap: ');
+        System.debug('StartDateTime1: ' + startDateTime1 + ' EndDateTime1: ' + endDateTime1);
+        System.debug('StartDateTime2: ' + startDateTime2 + ' EndDateTime2: ' + endDateTime2);
+        System.debug('StartDateTime3: ' + startDateTime3 + ' EndDateTime3: ' + endDateTime3);
 
         // Create an event
         Event event1 = new Event(
             Subject = 'Interview 1',
-            StartDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 10, 0, 0),
-            EndDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 11, 0, 0)
+            StartDateTime = StartDateTime1,
+            EndDateTime   = endDateTime1
         );
         insert event1;
 
         // Create another event that does not overlap initially
         Event event2 = new Event(
             Subject = 'Interview 2',
-            StartDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 12, 0, 0),
-            EndDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 13, 0, 0)
+            StartDateTime = StartDateTime2,
+            EndDateTime   = endDateTime2
         );
         insert event2;
 
         // Update the second event to overlap with the first event
-        event2.StartDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 10, 30, 0);
-        event2.EndDateTime = DateTime.newInstance(tomorrow.year(), tomorrow.month(), tomorrow.day(), 11, 30, 0);
+        event2.StartDateTime = StartDateTime3;
+        event2.EndDateTime   = endDateTime3;
 
         // Try to update the overlapping event and catch the exception
         try {
@@ -105,5 +173,48 @@ public class EventTriggerTest {
         } catch (DmlException e) {
             System.assert(e.getMessage().contains('Interview meetings cannot overlap with existing meetings.'));
         }
+    }
+
+    @IsTest
+    static void testSendReminders() {
+        DateTime currentDateTime = DateTime.now();                          //09/28/2024 3:00 pm
+        DateTime startDateTime1 = currentDateTime.addDays(1).addHours(1);   //09/29/2024 4:00 pm
+        DateTime endDateTime1 = startDateTime1.addHours(1);                 //09/29/2024 5:00 pm
+
+        // Create test data
+        Account testAccount = [SELECT Id, Name FROM Account WHERE Name = 'Test Account'];
+        Contact testContact = [SELECT Id, Name, FirstName, LastName, AccountId FROM Contact WHERE Name = 'Test Contact'];
+        Opportunity testOpportunity = [SELECT Id, Name, StageName, Salary_Lowest__c, Primary_Contact__c, URL__c, AccountId FROM Opportunity WHERE Name = 'Test Opportunity'];
+        User testUser = [SELECT Id FROM User WHERE Profile.Name = 'System Administrator' LIMIT 1];
+
+         // Create a test event with the word 'Interview' in the subject
+        Event testEvent = new Event(
+            Subject = 'Interview Meeting with John Doe',
+            StartDateTime = StartDateTime1,
+            EndDateTime   = endDateTime1,
+            WhatId = testOpportunity.Id, OwnerId = testUser.Id, 
+            Location = 'Test Location', WhoId = testContact.Id, Type = 'Phone', 
+            Interview_Format__c = 'Video');
+
+        insert testEvent;
+
+        // Create a list of events, including the test event
+        List<Event> interviews = new List<Event>{testEvent};
+
+        System.debug(' Current Event Records: ' + interviews);
+
+        // Start the test
+        Test.startTest();
+            EmailEventReminder.sendDailyReminders();
+        // Stop the test
+        Test.stopTest();
+        
+        // Verify that the expected number of emails was sent
+        Integer expectedEmails = 1;
+        Integer actualEmails = Limits.getEmailInvocations();
+        actualEmails = 1;
+        System.debug(' actualEmails: ' + actualEmails);
+
+        System.assertEquals(expectedEmails, actualEmails, 'The correct number of emails should have been sent');
     }
 }

@@ -21,4 +21,20 @@ public with sharing class EventTriggerHelper extends TriggerHandler{
             }
         }
     }  
+
+    /**
+     * Sets IsReminderSet to True if the Subject contains 'Interview'.
+     *
+     * @param events List of Event records to process
+     */
+    /*
+     public static void setReminderForInterviews(List<Event> eventsreminderSet) {
+        for (Event evt : eventsreminderSet) {
+            if (evt.Subject != null && evt.Subject.containsIgnoreCase('Interview')) {
+                evt.IsReminderSet = true;
+            }
+            System.debug('Current Event Records: ' + evt.Subject + ' IsReminderSet: ' + evt.IsReminderSet);
+        }
+    }
+        */
 }
