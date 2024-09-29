@@ -11,12 +11,12 @@ public with sharing class ContactRoleTriggerHandler extends TriggerHandler{
             this.oldContactRoleMap = (Map<Id, OpportunityContactRole>)Trigger.oldMap;
     }
 
-    public override void beforeInsert(){
-
-    }
-
     public override void afterInsert(){
         ContactRoleTriggerHelper.updateJobApplicationWhenOCRCreated(newContactRoleList);
+    }
+
+    /*public override void beforeInsert(){
+
     }
 
     public override void beforeUpdate(){
@@ -37,6 +37,6 @@ public with sharing class ContactRoleTriggerHandler extends TriggerHandler{
 
     public override void afterUndelete(){
         
-    }
+    }*/
 
 }
