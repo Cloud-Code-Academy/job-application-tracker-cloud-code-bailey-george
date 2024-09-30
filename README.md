@@ -5,33 +5,31 @@ This job application tracker is meant to be deployed to Salesforce and help you 
 ## Deployment Instructions
 
 Deployment Order:
-1)	objects> Account
-2)	lwc
+1)	lwc
+2)	objects> Account
 3)	objects> Opportunity> fields
 4)	objects> Opportunity> listViews
 5)	objects> Opportunity> validationRules
-6)	objects> Opportunity>Weblinks
+6)	objects> Opportunity> webLinks
 7)	objects> Org_Specific_Setting_mdt
 8)	customMetadata
-9)	classes
-10)	flexipages
-11)	layouts
-12)	Org specific setting under org specific setting mdt
-13)	Value field under org specific setting
-14)	Objects> Org_Specific_Setting_mdt> Fields
-15)	contentassets
-16)	applications
-17)	appMenus (only Salesforce1 app menu works)
-18)	externalCredentials
-19)	namedCredentials
-20)	objectTranslations Opportunity-en_US
-21)	standardValueSets 
-22)	pathAssistant> Job_Application_Path.pathAssistant-meta.xml
-23)	permissionsets> Job_Application_Components.permissionset-meta.xml
-24)	remoteSiteSettings
-25)	settings
-26)	triggers
-
+9)  flexipages
+10) objects> Event
+11) objects> Activity
+12)	classes
+13)	layouts
+14)	contentassets
+15)	applications
+16)	appMenus
+17)	externalCredentials
+18)	namedCredentials
+19)	objectTranslations Opportunity-en_US
+20)	standardValueSets 
+21)	pathAssistant> Job_Application_Path.pathAssistant-meta.xml
+22)	permissionsets> Job_Application_Components.permissionset-meta.xml
+23)	remoteSiteSettings
+24)	settings
+25)	triggers
 
 For the following, use the Salesforce User Interface:
 
@@ -40,7 +38,13 @@ Setup> Permission Sets> Job Application Components
 	Assign yourself the permission set
 
 Enable Paths (if necessary):
-Setup>Path Settings>Enable Paths
+Setup> Path Settings>Enable Paths
+
+Assign Contact Role Layout:
+Setup> Job Application Contact Role> Page Layout Assignments> Edit Assignment> Select relevant profiles to assign Opportunity Contact Role Page Layout to
+
+Update App Menu:
+Setup> App Menu> Click "Hide in App Launcher" next to every App except "Job Application"
 
 Add the Weekly Scheduling of the Apex Class ‘StaleJobApplicationCleanup’:
 Setup> Jobs> Scheduled Jobs
