@@ -12,20 +12,19 @@ public with sharing class EventTriggerHandler extends TriggerHandler{
     }
 
     public override void beforeInsert(){
-        EventTriggerHelper.PreventOverlappingEvents(neweventList);
+        EventTriggerHelper.PreventOverlappingEvents(neweventList);        
     }
 
     public override void beforeUpdate(){
         EventTriggerHelper.PreventOverlappingEvents(neweventList);
     }
-
     /*
     public override void afterInsert(){
     }
     
     public override void afterUpdate(){
     }
-
+    
     public override void beforeDelete(){
     }
 
