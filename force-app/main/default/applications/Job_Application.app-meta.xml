@@ -36,6 +36,14 @@
         <type>Flexipage</type>
         <pageOrSobjectType>Opportunity</pageOrSobjectType>
     </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <content>Home_Page_Default</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+        <pageOrSobjectType>standard-home</pageOrSobjectType>
+    </actionOverrides>
     <brand>
         <headerColor>#286B19</headerColor>
         <logo>Interview_Icon</logo>
