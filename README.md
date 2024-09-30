@@ -1,18 +1,59 @@
-# Salesforce DX Project: Next Steps
+# About the Project
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+This job application tracker is meant to be deployed to Salesforce and help you find, track and interact with important potential jobs.
 
-## How Do You Plan to Deploy Your Changes?
+## Deployment Instructions
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+Deployment Order:
+1)	objects> Account
+2)	lwc
+3)	objects> Opportunity> fields
+4)	objects> Opportunity> listViews
+5)	objects> Opportunity> validationRules
+6)	objects> Opportunity>Weblinks
+7)	objects> Org_Specific_Setting_mdt
+8)	customMetadata
+9)	classes
+10)	flexipages
+11)	layouts
+12)	Org specific setting under org specific setting mdt
+13)	Value field under org specific setting
+14)	Objects> Org_Specific_Setting_mdt> Fields
+15)	contentassets
+16)	applications
+17)	appMenus (only Salesforce1 app menu works)
+18)	externalCredentials
+19)	namedCredentials
+20)	objectTranslations Opportunity-en_US
+21)	standardValueSets 
+22)	pathAssistant> Job_Application_Path.pathAssistant-meta.xml
+23)	permissionsets> Job_Application_Components.permissionset-meta.xml
+24)	remoteSiteSettings
+25)	settings
+26)	triggers
 
-## Configure Your Salesforce DX Project
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+For the following, use the Salesforce User Interface:
 
-## Read All About It
+Assign Permission Set:
+Setup> Permission Sets> Job Application Components 
+	Assign yourself the permission set
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+Enable Paths (if necessary):
+Setup>Path Settings>Enable Paths
+
+Add the Weekly Scheduling of the Apex Class ‘StaleJobApplicationCleanup’:
+Setup> Jobs> Scheduled Jobs
+	Job Name = ‘Weekly Stale Job Application Cleanup’
+	Apex Class = ‘StaleJobApplicationCleanup’
+	Schedule Using CRON Expression = Check
+	Cron Expression = ‘0 0 1 ? * MON *’
+        This will schedule the Job to run weekly at 1 AM on Mondays indefinitely
+
+Add the Weekly Scheduling of the Apex Class ‘Weekly Jooble Job Applications’:
+Setup> Jobs> Scheduled Jobs
+	Job Name = ‘Weekly Jooble Job Applications’
+	Apex Class = ‘JoobleJobExtractScheduler
+	Schedule Using CRON Expression = Check
+	Cron Expression = ‘0 0 8 ? * MON *’
+        This will schedule the Job to run weekly at 8 AM on Mondays indefinitely

@@ -58,6 +58,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
 
     public static void updateFieldWhenStageChanges(List<Opportunity> jobAppsTriggered, List<Opportunity> oldJobAppsTriggered, Map<Id, Opportunity> newJobAppMapTrigg, Map<Id, Opportunity> oldJobAppMapTrigg){
         for (Opportunity jobApp : jobAppsTriggered){
+            //As Job Application stages change, the Next Step will be updated
             Opportunity oldJobApp = oldJobAppMapTrigg.get(jobApp.Id);
             if((jobApp.StageName != oldJobApp.StageName)&& jobApp.StageName == 'Applied'){
                 jobApp.NextStep = 'Follow Up on Application';
@@ -86,13 +87,19 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
 
         for(Opportunity jobApp : jobAppsTriggered){
             joobleSalary = jobApp.Jooble_Salary__c;
+            //Any salary brought in from Jooble will be evaluated to make sure we end up with the correct number in our "Salary - Lowest" field
+            //First this makes there is a Jooble salary, the "Salary - Lowest" field wasn't already manually populated, and the field contains numbers
             if(joobleSalary != null && jobApp.Salary_Lowest__c == null && joobleSalary.containsAny('0123456789')){
+                //Processes the salary appropriately if it contains an hourly rate
                 if ((joobleSalary.contains('per hour') || joobleSalary.contains('per hr') || joobleSalary.contains('/hour') || joobleSalary.contains('/hr'))){
                 minSalaryDecimal = JobApplicationTriggerHelper.processStringFromHourlyRate(joobleSalary);
+                //Processes the salary appropriately if it contains a "k" to represent a thousand
                 } else if ((joobleSalary.contains('k')||joobleSalary.contains('K'))){
                 minSalaryDecimal = JobApplicationTriggerHelper.processStringFromKSalary(joobleSalary);
+                //Proccesses the salary if it contains a range
                 } else if (joobleSalary.contains('-')) {
                 minSalaryDecimal = Decimal.valueOf(joobleSalary.substringBefore('-').replaceAll(regex, '').deleteWhiteSpace());
+                //Strips out any other characters if none of those other criteria have been met
                 } else {
                 minSalaryDecimal = Decimal.valueOf(joobleSalary.replaceAll(regex,'').deleteWhiteSpace());
                 }
@@ -192,6 +199,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
     }
 
     public static Decimal calculateFedIncomeTax (Decimal salary, String filingStatus, Decimal spousesSalary){
+        //Federal income will be calculated based on Filing Status
         Decimal fedIncomeTax = 0;
         if (filingStatus == 'Single'){
             fedIncomeTax = JobApplicationTriggerHelper.filingSingle(salary);     
@@ -316,6 +324,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
     }
 
     public static void populatePrimaryContact(List<Opportunity> jobAppsTriggered, Map<Id, Opportunity> newJobAppMapTrigg){
+        //In order to populate the Primary Contact field effectively, we first want to look for an Opportunity Contact Role that is marked as "Primary"
         Map<Id, OpportunityContactRole> primaryContactRolesById = new Map<Id, OpportunityContactRole>([SELECT Id, ContactId, IsPrimary, OpportunityId 
                                                                                                        FROM OpportunityContactRole 
                                                                                                        WHERE (isPrimary = true) AND (OpportunityId IN :newJobAppMapTrigg.values())]);
@@ -326,6 +335,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
             primaryContactIdByAppId.put(appId, contactId);                                                                                      
         }
 
+        //Next we will look for other Opportunity Contact Roles that are not marked as "Primary"
         Map<Id, OpportunityContactRole> notPrimaryContactRolesById = new Map<Id, OpportunityContactRole>([SELECT Id, ContactId, IsPrimary, OpportunityId 
                                                                                                           FROM OpportunityContactRole 
                                                                                                           WHERE (isPrimary = false) AND (OpportunityId IN :newJobAppMapTrigg.values()) ORDER BY Contact.CreatedDate ASC]);
@@ -338,6 +348,7 @@ public with sharing class JobApplicationTriggerHelper extends TriggerHandler{
             }
         }
 
+        //Finally, if we can't find any Opportunity Contact Roles, we want to find the earliest created contact on the account
         Map<Id, Opportunity> appsWithoutContactsById = new Map<Id, Opportunity>();
         Set<Id> acctsForAppsWithNoContact = new Set<Id>();
         for (Opportunity jobApp : jobAppsTriggered){
