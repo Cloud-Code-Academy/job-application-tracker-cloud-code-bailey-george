@@ -17,7 +17,6 @@ public with sharing class EmailEventReminder {
                                 AND Subject LIKE '%Interview%'];
         
         // Debug the total number of events returned
-        System.debug('Total Events Returned: ' + events.size());
 
         // If there are events, send reminders
         if (!events.isEmpty()) {
@@ -36,10 +35,6 @@ public with sharing class EmailEventReminder {
         List<User> users = getUsers(events);
         List<Contact> contacts = getContacts(opportunities);
         List<Account> accounts = getAccounts(events);
-        System.debug('Total Opportunities Returned: ' + opportunities.size());
-        System.debug('Total Users Returned: ' + users.size());
-        System.debug('Total Contacts Returned: ' + contacts.size());
-        System.debug('Total Accounts Returned: ' + accounts.size());
 
         // Create maps for easy access to related records
         Map<Id, Opportunity> opportunitiesMap = new Map<Id, Opportunity>(opportunities);
@@ -51,21 +46,18 @@ public with sharing class EmailEventReminder {
 
         // Iterate through events and send reminder emails
         for (Event evt : events) {
-            //Opportunity opp = opportunitiesMap.get(evt.WhatId);
+            Opportunity opp = opportunitiesMap.get(evt.WhatId);
             // Create and send email
             Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
             email.setTargetObjectId(UserInfo.getUserId());
             email.setSaveAsActivity(false);
-            //email.setSubject('Interview Reminder: ' + opp.Name);
-            email.setSubject('Interview Reminder');
+            email.setSubject('Interview Reminder: ' + opp.Name);
             email.setHtmlBody(createEmailBody(evt, opportunitiesMap, usersMap, contactsMap, accountsMap));
-            
+
             emails.add(email);
         }
-        System.debug('emails sent ' + emails);
 
         if (!emails.isEmpty()) {
-            System.debug('emails being sent');
             Messaging.sendEmail(emails);  // Send all emails at once to avoid loop issues
         }
     }

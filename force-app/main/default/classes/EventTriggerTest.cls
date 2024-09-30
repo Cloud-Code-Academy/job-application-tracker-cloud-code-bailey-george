@@ -53,11 +53,6 @@ private class EventTriggerTest {
 
         // Output the DateTime fields for verification
         
-        System.debug('************* ');
-        System.debug('TestNoOverlap: ');
-        System.debug('StartDateTime1: ' + startDateTime1 + ' EndDateTime1: ' + endDateTime1);
-        System.debug('StartDateTime2: ' + startDateTime2 + ' EndDateTime2: ' + endDateTime2);    
-
         // Create an event that does not overlap
         Event event1 = new Event(
             Subject = 'Interview 1',
@@ -92,13 +87,6 @@ private class EventTriggerTest {
 
         DateTime startDateTime3 = startDateTime1.addMinutes(30);            //09/29/2024 4:30 pm
         DateTime endDateTime3 = startDateTime3.addHours(1);                 //09/29/2024 5:30 pm
-
-        // Output the DateTime fields for verification
-        System.debug('************* ');
-        System.debug('TestOverlap: ');
-        System.debug('StartDateTime1: ' + startDateTime1 + ' EndDateTime1: ' + endDateTime1);
-        System.debug('StartDateTime2: ' + startDateTime2 + ' EndDateTime2: ' + endDateTime2);
-        System.debug('StartDateTime3: ' + startDateTime3 + ' EndDateTime3: ' + endDateTime3);
 
         // Create an event
         Event event1 = new Event(
@@ -137,14 +125,6 @@ private class EventTriggerTest {
 
         DateTime startDateTime3 = startDateTime1.addMinutes(30);            //09/29/2024 4:30 pm
         DateTime endDateTime3 = startDateTime3.addHours(1);                 //09/29/2024 5:30 pm
-
-        // Output the DateTime fields for verification
-        
-        System.debug('************* ');
-        System.debug('testUpdateOverlap: ');
-        System.debug('StartDateTime1: ' + startDateTime1 + ' EndDateTime1: ' + endDateTime1);
-        System.debug('StartDateTime2: ' + startDateTime2 + ' EndDateTime2: ' + endDateTime2);
-        System.debug('StartDateTime3: ' + startDateTime3 + ' EndDateTime3: ' + endDateTime3);
 
         // Create an event
         Event event1 = new Event(
@@ -201,8 +181,6 @@ private class EventTriggerTest {
         // Create a list of events, including the test event
         List<Event> interviews = new List<Event>{testEvent};
 
-        System.debug(' Current Event Records: ' + interviews);
-
         // Start the test
         Test.startTest();
             EmailEventReminder.sendDailyReminders();
@@ -213,7 +191,6 @@ private class EventTriggerTest {
         Integer expectedEmails = 1;
         Integer actualEmails = Limits.getEmailInvocations();
         actualEmails = 1;
-        System.debug(' actualEmails: ' + actualEmails);
 
         System.assertEquals(expectedEmails, actualEmails, 'The correct number of emails should have been sent');
     }
