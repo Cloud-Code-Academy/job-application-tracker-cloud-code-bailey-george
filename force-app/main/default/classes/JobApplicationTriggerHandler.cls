@@ -15,7 +15,6 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
         JobApplicationTriggerHelper.setStatusToSaved(newJobAppList);  
         JobApplicationTriggerHelper.requirePositiveSalaries(newJobAppList);
         JobApplicationTriggerHelper.pullSalaryFromJoobleSalary(newJobAppList);
-
     }
 
     public override void beforeUpdate(){
@@ -33,13 +32,15 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
         JobApplicationTriggerHelper.generateTaskAfterUpdate(newJobAppList, oldJobAppList, newJobAppMap, oldJobAppMap);
     }
 
-    public override void beforeDelete(){
+    /*public override void beforeDelete(){
+
     }
 
     public override void afterDelete(){
+
     }
 
     public override void afterUndelete(){
-    }
 
+    }*/
 }
