@@ -48,7 +48,7 @@ Setup> App Menu> Click "Hide in App Launcher" next to every App except "Job Appl
 
 Add the Weekly Scheduling of the Apex Class ‘StaleJobApplicationCleanup’:
 Setup> Jobs> Scheduled Jobs
-	Job Name = ‘Weekly Stale Job Application Cleanup’
+	<li>Job Name = ‘Weekly Stale Job Application Cleanup’</li>
 	Apex Class = ‘StaleJobApplicationCleanup’
 	Schedule Using CRON Expression = Check
 	Cron Expression = ‘0 0 1 ? * MON *’
